@@ -15,10 +15,38 @@ subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
 
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
+}
+
+subprojects {
+    val fixNamespace = {
+        val androidExtension = extensions.findByName("android")
+        if (androidExtension != null) {
+            try {
+                val namespaceMethod = androidExtension.javaClass.getMethod("getNamespace")
+                val currentNamespace = namespaceMethod.invoke(androidExtension)
+                
+                if (currentNamespace == null) {
+                    val setNamespaceMethod = androidExtension.javaClass.getMethod("setNamespace", String::class.java)
+                    setNamespaceMethod.invoke(androidExtension, "dev.isar.${project.name}")
+                }
+            } catch (e: Exception) {
+                // Fail-safe jika bukan modul Android murni
+            }
+        }
+    }
+
+    if (project.state.executed) {
+        fixNamespace()
+    } else {
+        project.afterEvaluate {
+            fixNamespace()
+        }
+    }
 }

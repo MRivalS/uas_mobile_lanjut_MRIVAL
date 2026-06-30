@@ -1,11 +1,14 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
-import '../../features/home/data/repositories/news_repository.dart'; 
 import '../config/env_config.dart';
+import '../database/isar_service.dart';
+import '../../features/home/data/repositories/news_repository.dart';
 
 final locator = GetIt.instance;
 
 void setupLocator() {
+  locator.registerLazySingleton<IsarService>(() => IsarService());
+
   locator.registerLazySingleton<Dio>(() {
     final dio = Dio(BaseOptions(baseUrl: EnvConfig.baseUrl));
     dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
@@ -13,6 +16,6 @@ void setupLocator() {
   });
 
   locator.registerLazySingleton<NewsRepository>(
-    () => NewsRepository(locator<Dio>()),
+    () => NewsRepository(locator<Dio>(), locator<IsarService>()),
   );
 }
