@@ -1,0 +1,33 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "DigiNews (DEV - Mochammad)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define",
+        "ENV_NAME=DEV",
+        "--dart-define",
+        "APP_NAME=DEV - Mochammad",
+        "--dart-define",
+        "BASE_URL=https://newsapi.org/v2/"
+      ]
+    },
+    {
+      "name": "DigiNews (PROD - 20123006)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define",
+        "ENV_NAME=PROD",
+        "--dart-define",
+        "APP_NAME=UTD - 20123006",
+        "--dart-define",
+        "BASE_URL=https://newsapi.org/v2/"
+      ]
+    }
+  ]
+}

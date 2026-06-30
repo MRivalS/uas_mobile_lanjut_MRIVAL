@@ -1,7 +1,26 @@
+import java.util.Base64
+def dartEnvironmentVariables = [:]
+if (project.hasProperty('dart-defining')) {
+    project.property('dart-defining').split(',').each { entry ->
+        def pair = entry.split('=')
+        if (pair.length >= 2) {
+            try {
+                // Flutter versi baru melakukan encode Base64 pada nilai definisinya
+                def decodedValue = new String(Base64.getDecoder().decode(pair[1]))
+                dartEnvironmentVariables[pair[0]] = decodedValue
+            } catch (Exception e) {
+                // Jika tidak terencode Base64, ambil nilai mentahnya
+                dartEnvironmentVariables[pair[0]] = pair[1]
+            }
+        }
+    }
+}
+
+def rawAppName = dartEnvironmentVariables['APP_NAME'] ?: "DigiNews DEV"
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
@@ -20,20 +39,18 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.uas_mobile_lanjut"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders = [
+            appName: rawAppName
+        ]
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
         }
     }

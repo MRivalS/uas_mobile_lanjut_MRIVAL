@@ -4,12 +4,8 @@ import 'core/routing/app_router.dart';
 import 'core/config/env_config.dart';
 
 void main() {
-  // Wajib dipanggil jika ada proses async/inisialisasi sebelum runApp
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Menjalankan Dependency Injection
   setupLocator();
-
   runApp(const FinalProjectApp());
 }
 
@@ -18,10 +14,22 @@ class FinalProjectApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color primaryColor = EnvConfig.isProduction
+        ? const Color(0xFF0D47A1) 
+        : Colors.orange;
+
     return MaterialApp.router(
       debugShowCheckedModeBanner: !EnvConfig.isProduction,
-      title: 'UAS Mobile Lanjut',
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue),
+      title: EnvConfig.appName,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: primaryColor,
+          brightness: EnvConfig.isProduction
+              ? Brightness.dark
+              : Brightness.light,
+        ),
+      ),
       routerConfig: AppRouter.router,
     );
   }
