@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
+import '../../features/home/data/repositories/news_repository.dart'; 
 import '../config/env_config.dart';
 
 final locator = GetIt.instance;
@@ -10,4 +11,8 @@ void setupLocator() {
     dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
     return dio;
   });
+
+  locator.registerLazySingleton<NewsRepository>(
+    () => NewsRepository(locator<Dio>()),
+  );
 }
