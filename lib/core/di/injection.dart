@@ -20,7 +20,6 @@ void setupLocator() {
     () => NewsRepository(locator<Dio>(), locator<IsarService>()),
   );
 
-  // 🔥 2. TAMBAHKAN REGISTRASI NEWS_CUBIT DI SINI
   locator.registerFactory<NewsCubit>(
     () => NewsCubit(locator<NewsRepository>()),
   );

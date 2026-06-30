@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/home/presentation/pages/detail_page.dart'; 
 import '../../features/home/presentation/cubit/news_cubit.dart';
-import '../di/injection.dart' as di; 
+import '../di/injection.dart' as di;
 
 class AppRouter {
   AppRouter._();
-
   static final router = GoRouter(
     initialLocation: '/',
     routes: [
@@ -18,6 +18,15 @@ class AppRouter {
             child: const HomePage(),
           );
         },
+        routes: [
+          GoRoute(
+            path: 'detail',
+            builder: (context, state) {
+              final newsItem = state.extra;
+              return DetailPage(newsItem: newsItem);
+            },
+          ),
+        ],
       ),
     ],
   );
